@@ -7,7 +7,7 @@
 
     // SVG иконка play
     const playIcon = `
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M8 5.14v13.72c0 .97 1.06 1.58 1.9 1.1l10.74-6.86c.82-.52.82-1.68 0-2.2L9.9 4.04C9.06 3.56 8 4.17 8 5.14z" fill="currentColor"/>
         </svg>
     `;
@@ -39,24 +39,26 @@
         button.className = BUTTON_CLASS;
         button.innerHTML = playIcon + '<span>' + getButtonText() + '</span>';
 
-        // Стили с синим фоном
+        // Стили с синим фоном — компактная кнопка
         button.style.cssText = `
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            padding: 10px 20px;
+            justify-content: center;
+            gap: 6px;
+            padding: 0 16px;
+            height: 48px;
             background: #3b82f6;
             border: none;
-            border-radius: 48px;
+            border-radius: 24px;
             font-family: "YS Text", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 500;
             color: #fff;
             cursor: pointer;
-            transition: all 0.15s ease;
+            transition: background 0.15s ease;
             white-space: nowrap;
-            line-height: 1.2;
-            margin-left: 8px;
+            flex-shrink: 0;
+            box-sizing: border-box;
         `;
 
         // Стили для иконки
@@ -86,14 +88,38 @@
         return button;
     }
 
-    // Функция для поиска кнопки "Буду смотреть"
-    function findWatchlistButton() {
+    // Функция для поиска кнопки действия на странице фильма/сериала
+    function findActionButton() {
         const buttons = document.querySelectorAll('button');
+
+        // Ключевые слова для поиска кнопок действий
+        const actionKeywords = [
+            'буду смотреть',
+            'смотреть фильм',
+            'смотреть сериал',
+            'купить и смотреть',
+            'продолжить просмотр'
+        ];
 
         for (const btn of buttons) {
             const text = btn.textContent?.trim().toLowerCase() || '';
-            if (text === 'буду смотреть') {
-                return btn;
+
+            // Ищем кнопки с ключевыми словами
+            for (const keyword of actionKeywords) {
+                if (text.includes(keyword)) {
+                    return btn;
+                }
+            }
+        }
+
+        // Запасной вариант — ищем кнопку с тремя точками
+        for (const btn of buttons) {
+            const rect = btn.getBoundingClientRect();
+            // Кнопка меню обычно маленькая, квадратная и в верхней части
+            if (rect.width > 40 && rect.width < 60 && rect.height > 40 && rect.height < 60) {
+                if (rect.top < 700 && rect.top > 200) {
+                    return btn;
+                }
             }
         }
 
@@ -102,26 +128,30 @@
 
     // Функция для поиска контейнера с кнопками действий
     function findButtonsContainer() {
-        const watchlistBtn = findWatchlistButton();
+        const actionBtn = findActionButton();
 
-        if (watchlistBtn) {
-            // Ищем контейнер с кнопками - родитель, содержащий несколько кнопок
-            let container = watchlistBtn.parentElement;
+        if (actionBtn) {
+            // Ищем flex-контейнер с кнопками
+            let container = actionBtn.parentElement;
 
             for (let i = 0; i < 6; i++) {
                 if (!container) break;
 
-                // Проверяем, это ли контейнер с кнопками (горизонтальный flex)
                 const style = window.getComputedStyle(container);
-                if (style.display === 'flex' && style.flexDirection === 'row') {
+                const childCount = container.children.length;
+
+                // Ищем горизонтальный flex-контейнер с несколькими детьми
+                if ((style.display === 'flex' || style.display === 'inline-flex') &&
+                    style.flexDirection === 'row' &&
+                    childCount >= 2 && childCount <= 6) {
                     return container;
                 }
 
                 container = container.parentElement;
             }
 
-            // Возвращаем ближайший родительский контейнер
-            return watchlistBtn.parentElement?.parentElement || watchlistBtn.parentElement;
+            // Возвращаем родителя кнопки
+            return actionBtn.parentElement;
         }
 
         return null;
@@ -148,7 +178,7 @@
         // Создаём кнопку
         const button = createWatchFreeButton();
 
-        // Вставляем кнопку в контейнер
+        // Вставляем кнопку последней в контейнер
         container.appendChild(button);
 
         console.log('[Watch a movie] Кнопка добавлена');
