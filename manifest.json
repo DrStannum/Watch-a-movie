@@ -1,0 +1,45 @@
+{
+  "manifest_version": 3,
+  "name": "Watch a movie",
+  "version": "1.2",
+  "description": "Расширение для быстрого перехода к просмотру прямо со страницы Кинопоиска",
+  "icons": {
+    "16": "img/ico-16.png",
+    "32": "img/ico-32.png",
+    "48": "img/ico-48.png",
+    "128": "img/ico-128.png"
+  },
+  "permissions": [
+    "tabs",
+    "activeTab"
+  ],
+  "host_permissions": [
+    "*://kinopoisk.ru/*",
+    "*://www.kinopoisk.ru/*",
+    "*://hd.kinopoisk.ru/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Просмотр кино",
+    "default_icon": {
+      "16": "img/ico-16.png",
+      "32": "img/ico-32.png",
+      "48": "img/ico-48.png",
+      "128": "img/ico-128.png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://kinopoisk.ru/*",
+        "*://www.kinopoisk.ru/*",
+        "*://hd.kinopoisk.ru/*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
