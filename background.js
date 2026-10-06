@@ -1,6 +1,6 @@
-// Background script для расширения Kinopoisk to Sspoisk
+// Background script для расширения Watch a movie
 chrome.runtime.onInstalled.addListener(function(details) {
-    console.log('Kinopoisk to Sspoisk Redirector установлен');
+    console.log('Watch a movie установлен');
 });
 
 // Обработчик для установки иконки расширения

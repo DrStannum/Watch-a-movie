@@ -28,8 +28,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Проверяем, что это фильм или сериал на kinopoisk.ru
             if (currentUrl.includes('kinopoisk.ru/film') || currentUrl.includes('kinopoisk.ru/series/')) {
-                // Заменяем kinopoisk.ru на sspoisk.ru
-                const newUrl = currentUrl.replace('kinopoisk.ru', 'sspoisk.ru');
+                // Заменяем kinopoisk.ru на kinokino.win
+                const newUrl = currentUrl.replace('kinopoisk.ru', 'kinokino.win');
 
                 // Обновляем вкладку и закрываем popup
                 chrome.tabs.update(currentTab.id, {url: newUrl}, function() {

@@ -81,7 +81,7 @@
         button.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
-            const newUrl = window.location.href.replace('kinopoisk.ru', 'sspoisk.ru');
+            const newUrl = window.location.href.replace('kinopoisk.ru', 'kinokino.win');
             window.location.href = newUrl;
         });
 
